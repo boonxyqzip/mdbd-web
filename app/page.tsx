@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { linkify } from "../lib/utils";
 
 type MoodboardItem = {
   id: string;
@@ -29,6 +31,7 @@ const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8080/api/moodboards";
 
 export default function Page() {
+  const router = useRouter();
   const [moodboards, setMoodboards] = useState<Moodboard[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
@@ -245,7 +248,7 @@ export default function Page() {
               <div key={m.id} className="card">
                 <div className="pill">#{m.id.slice(0, 6)}</div>
                 <h3>{m.title}</h3>
-                <p>{m.description}</p>
+                <p>{m.description ? linkify(m.description) : null}</p>
                 <div>
                   {(m.items ?? []).map((item) => (
                     <span key={item.id} className="item-chip">
@@ -255,7 +258,7 @@ export default function Page() {
                           style={{ background: item.color }}
                         />
                       ) : null}
-                      {item.text}
+                      {linkify(item.text)}
                     </span>
                   ))}
                 </div>
@@ -268,6 +271,12 @@ export default function Page() {
                     onClick={() => loadToForm(m.id)}
                   >
                     불러오기
+                  </button>
+                  <button
+                    className="secondary"
+                    onClick={() => router.push(`/moodboards/${m.id}`)}
+                  >
+                    상세보기
                   </button>
                 </div>
               </div>
