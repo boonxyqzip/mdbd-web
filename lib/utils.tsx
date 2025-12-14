@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * URL 패턴을 자동으로 감지하여 링크로 변환하는 함수
  */
